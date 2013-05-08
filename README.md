@@ -1,9 +1,13 @@
 Code Painter
 ============
 
-Code Painter is a JavaScript beautifier that instead of asking you to manually specify the desired  formatting style, can infer it from a code sample provided by you. This could, for instance, be a code snippet from the same project that your new code is supposed to be integrated with.
+Code Painter is a JavaScript beautifier that instead of asking you to manually specify the desired formatting style,
+can infer it from a code sample provided by you. This could, for instance, be a code snippet from the same project
+that your new code is supposed to be integrated with.
 
 It uses the excellent [Esprima parser](http://esprima.org/) by [Ariya Hidayat](http://ariya.ofilabs.com/) (thanks!).
+
+It also uses [EditorConfig](http://editorconfig.org/) to define coding style.
 
 The name is inspired by Word's Format Painter, which does a similar job for rich text.
 
@@ -35,19 +39,10 @@ Or a file containing a JSON string:
 Supported style properties
 --------------------------
 
-1.  **Indentation**: `{ character: '?', width: ? }`
+1.  EditorConfig properties: **indent\_style**, **indent\_size**, **trim\_trailing\_whitespace** and
+    **insert\_final\_newline**. Refer to EditorConfig's [documentation](http://editorconfig.org/) for more information.
 
-    Specifies the indentation used for scopes.
-
-    `character` should be one of: *' '*, *'\t'* and `width` should be a positive integer, e.g.:
-
-    `{ character: ' ', width: 4 }` or `{ character: '\t', width: 1 }`
-
-1.  **LastEmptyLine**: *present*, *omitted*
-
-    Specifies if there should always be an empty line at the end of a file.
-
-1.  **QuoteType**: *single*, *double*
+1.  **quote\_type**: *single*, *double*
 
     Specifies what kind of quoting you would like to use for string literals:
 
@@ -57,31 +52,28 @@ Supported style properties
 
     `console.log('Foo "Bar" Baz')` -> `console.log("Foo \"Bar\" Baz")`
 
-1.  **SpaceAfterControlStatements**: *present*, *omitted*
+1.  **space\_after\_control\_statements**: *true*, *false*
 
     Specifies whether or not there should be a space between if/for/while and the following (.
 
     `if(x === 4)` -> `if (x === 4)` or `while (foo()) {` -> `while(foo()) {`
 
-1.  **SpaceAfterAnonymousFunctions**: *present*, *omitted*
+1.  **space\_after\_anonymous\_functions**: *true*, *false*
 
     Specifies whether or not there should be a space between function and () in anonymous functions.
 
     `function(x) { }` -> `function (x) { }`
 
-1.  **SpacesAroundOperators**: *present*, *omitted*
+1.  **spaces\_around\_operators**: *true*, *false*
 
     Specifies whether or not there should be spaces around operators such as +,=,+=,>=,!==.
 
     `var x = 4;` -> `var x=4;` or `a>=b` -> `a >= b` or `a>>2` -> `a >> 2`
 
-1.  **TrailingWhitespaces**: *strip*
+1.  **spaces\_in\_parens**: *true*, *false*, *idiomatic*
 
-    Specifies whether trailing whitespaces should be stripped from the end of the lines.
-
-1.  **SpacesInParens**: *present*, *omitted*
-
-    Specifies whether or not there should be spaces inside parenthesis. Empty pairs of parenthesis will always be shortened.
+    Specifies whether or not there should be spaces inside parenthesis. Empty pairs of parenthesis will always be
+    shortened. Refer to [Idiomatic Style Manifesto](https://github.com/rwldrn/idiomatic.js/#whitespace) for
+    *idiomatic* option.
 
     `(x===4)` -> `( x===4 )` or `( )` -> `()`
-
