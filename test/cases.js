@@ -42,7 +42,7 @@ function testInferrance( setting ) {
 		if( fs.existsSync( samplePath ) ) {
 			it( 'infers ' + styleKey + ' setting as ' + styleValue, function( done ) {
 				infer( samplePath, function( inferredStyle ) {
-					setting.styles[ styleKey ].should.equal( inferredStyle[ styleKey ] );
+					inferredStyle[ styleKey ].should.equal( styleValue );
 					done();
 				} );
 			} );
