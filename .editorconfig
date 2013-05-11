@@ -1,10 +1,9 @@
 root = true
 
 [*]
-indent_style = space
-indent_width = 4
+indent_style = tab
 trim_trailing_whitespace = true
-end_of_line = lf
+end_of_line = crlf
 insert_final_newline = true
 
 quote_type = single
@@ -12,3 +11,7 @@ spaces_around_operators = true
 space_after_control_statements = true
 space_after_anonymous_functions = true
 spaces_in_parens = idiomatic
+
+[package.json]
+indent_style = space
+indent_size = 2
