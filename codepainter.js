@@ -6,7 +6,7 @@ var fs = require('fs'),
 
 module.exports.infer = function( sample, callback ) {
 	var style = {},
-	    tokenizer = new Tokenizer();
+		tokenizer = new Tokenizer();
 
 	sample.pipe( tokenizer );
 
@@ -40,9 +40,8 @@ module.exports.transform = function (input, style, output, callback) {
 	});
 
 	input.pipe(tokenizer);
-	serializer.pipe( output, { end : false } );
+	serializer.pipe( output );
 	serializer.on( 'end', function() {
-		output.end();
 		callback();
 	});
 
