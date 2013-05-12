@@ -42,7 +42,7 @@ Supported style properties
 1.  EditorConfig properties: **indent\_style**, **indent\_size**, **trim\_trailing\_whitespace** and
     **insert\_final\_newline**. Refer to EditorConfig's [documentation](http://editorconfig.org/) for more information.
 
-1.  **quote\_type**: *single*, *double*
+1.  **quote\_type**: *single*, *double*, *auto*
 
     Specifies what kind of quoting you would like to use for string literals:
 
@@ -51,6 +51,11 @@ Supported style properties
     Adds proper escaping when necessary, obviously.
 
     `console.log('Foo "Bar" Baz')` -> `console.log("Foo \"Bar\" Baz")`
+
+    The *auto* setting infers the quoting with a precedence toward *single* mode.
+
+    `console.log("Foo \"Bar\" Baz")` -> `console.log('Foo "Bar" Baz')` or
+    `console.log('Foo \'Bar\' Baz')` -> `console.log("Foo 'Bar' Baz")`
 
 1.  **space\_after\_control\_statements**: *true*, *false*
 
@@ -64,16 +69,21 @@ Supported style properties
 
     `function(x) { }` -> `function (x) { }`
 
-1.  **spaces\_around\_operators**: *true*, *false*
+1.  **spaces\_around\_operators**: *true*, *false*, *hybrid*
 
-    Specifies whether or not there should be spaces around operators such as +,=,+=,>=,!==.
+    Specifies whether or not there should be spaces around operators such as `+,=,+=,>=,!==`.
 
     `var x = 4;` -> `var x=4;` or `a>=b` -> `a >= b` or `a>>2` -> `a >> 2`
+
+    *Hybrid* mode is mostly like the *true* setting, except it behaves as *false* on operators `*,/,%`
+    and unary operators `!,~,+,-`, not to be confused with the `+` and `-` addition and subtraction operators.
+
+    `var x = 4 * 2 + 1 / 7;` -> `var x = 4*2 + 1/7;`
 
 1.  **spaces\_in\_parens**: *true*, *false*, *idiomatic*
 
     Specifies whether or not there should be spaces inside parenthesis. Empty pairs of parenthesis will always be
     shortened. Refer to [Idiomatic Style Manifesto](https://github.com/rwldrn/idiomatic.js/#whitespace) for
-    *idiomatic* option.
+    *idiomatic* setting.
 
     `(x===4)` -> `( x===4 )` or `( )` -> `()`
