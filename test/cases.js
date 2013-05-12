@@ -42,7 +42,7 @@ function testInferrance( setting ) {
 		if( fs.existsSync( samplePath ) ) {
 			it( 'infers ' + styleKey + ' setting as ' + styleValue, function( done ) {
 				infer( samplePath, function( inferredStyle ) {
-					inferredStyle[ styleKey ].should.equal( styleValue );
+					styleValue.should.equal( inferredStyle[ styleKey ] );
 					done();
 				} );
 			} );
@@ -75,7 +75,7 @@ function testTransformation( setting ) {
 
 		transform( inputPath, setting.styles, tempPath, function() {
 			var output = fs.readFileSync( tempPath, 'utf-8' );
-			output.should.equal( expected );
+			expected.should.equal( output );
 			fs.unlinkSync( tempPath );
 			done();
 		} );

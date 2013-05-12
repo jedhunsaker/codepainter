@@ -1,98 +1,103 @@
-var fs = require('fs'),
-	Pipe = require('./lib/Pipe'),
-	rules = require('./lib/rules'),
-	Serializer = require('./lib/Serializer'),
-	Tokenizer = require('./lib/Tokenizer');
+var fs = require( 'fs' );
 
-module.exports.infer = function( sample, callback ) {
-	var style = {},
-		tokenizer = new Tokenizer();
+var Pipe = require( './lib/Pipe' );
+var rules = require( './lib/rules' );
+var Serializer = require( './lib/Serializer' );
+var Tokenizer = require( './lib/Tokenizer' );
 
-	sample.pipe( tokenizer );
 
-	rules.forEach( function( rule ) {
-		rule.infer( tokenizer, function( inferredStyle ) {
-			Object.keys( inferredStyle ).forEach( function( key ) {
-				style[ key ] = inferredStyle[ key ];
+module.exports = {
+	infer : function( sample, callback ) {
+		var style = {};
+		var tokenizer = new Tokenizer();
+
+		sample.pipe( tokenizer );
+
+		rules.forEach( function( rule ) {
+			rule.infer( tokenizer, function( inferredStyle ) {
+				Object.keys( inferredStyle ).forEach( function( key ) {
+					style[ key ] = inferredStyle[ key ];
+				} );
 			} );
 		} );
-	} );
 
-	tokenizer.on( 'end', function() {
-		tokenizer.registerRules( style );
-		callback( style );
-	} );
+		tokenizer.on( 'end', function() {
+			tokenizer.registerRules( style );
+			callback( style );
+		} );
 
-	sample.resume();
-};
+		sample.resume();
+	},
 
-module.exports.transform = function (input, style, output, callback) {
-	var enabledRules = [],
-		tokenizer = new Tokenizer(),
-		serializer = new Serializer(),
-		streams = [];
+	transform : function( input, style, output, callback ) {
+		var enabledRules = [];
+		var tokenizer = new Tokenizer();
+		var serializer = new Serializer();
+		var streams = [];
 
-	style = convertStyle(style);
-
-	rules.forEach(function (rule) {
-		if (typeof style[rule.name] !== 'undefined' && style[rule.name] !== null)
-			enabledRules.push(rule);
-	});
-
-	input.pipe(tokenizer);
-	serializer.pipe( output );
-	serializer.on( 'end', function() {
-		callback();
-	});
-
-	if (enabledRules.length > 0) {
-
-		tokenizer.registerRules( enabledRules );
-
-		streams.push(tokenizer);
-
-		for (var i = 0; i < enabledRules.length - 1; i++)
-			streams.push(new Pipe());
-
-		streams.push(serializer);
-
-		var errorFunction = function (error) {};
-		for (i = 0; i < enabledRules.length; i++) {
-			var rule = enabledRules[i];
-			rule.transform(streams[i], style, streams[i + 1], errorFunction);
+		style = this.convertStyle( style );
+		if( style.hasOwnProperty( 'indent_style' ) ) {
+			style.indent_style_and_size = true;
 		}
-	} else {
-		tokenizer.pipe(serializer);
-	}
-	input.resume();
-};
+		rules.forEach( function( rule ) {
+			if( typeof style[ rule.name ] !== 'undefined' && style[ rule.name ] !== null )
+				enabledRules.push( rule );
+		} );
 
-/**
- * Converts the style string into an object.
- *
- * First tries to parse the style string as a JSON string. If that does not work,
- * tries interpret the style string as the name of a predefined style and load
- * the respective style file. If that does not work either, throws an error.
- *
- */
-function convertStyle ( style ) {
+		input.pipe( tokenizer );
+		serializer.pipe( output );
+		serializer.on( 'end', function() {
+			callback();
+		} );
 
-	try {
-		return typeof style === 'string' ? JSON.parse(style) : style;
-	} catch (e) {
-		try {
-			return require ( __dirname + '/lib/styles/' + style + '.json' );
-		} catch (e2) {
+		if( enabledRules.length > 0 ) {
 
-			msg = style + ' is not a valid style.\n\nValid predefined styles are:\n';
+			tokenizer.registerRules( enabledRules );
 
-			var files = fs.readdirSync( __dirname + '/lib/styles/' );
+			streams.push( tokenizer );
 
-			for ( var i in files ) {
-				msg += '  ' + files[i].slice(0, -5) + '\n';
+			for( var i = 0; i < enabledRules.length - 1; i++ )
+				streams.push( new Pipe() );
+
+			streams.push( serializer );
+
+			var errorFunction = function(){};
+			for( i = 0; i < enabledRules.length; i++ ) {
+				var rule = enabledRules[ i ];
+				rule.transform( streams[ i ], style, streams[ i + 1 ], errorFunction );
 			}
+		} else {
+			tokenizer.pipe( serializer );
+		}
+		input.resume();
+	},
 
-			throw new Error(msg);
+	/**
+	 * Converts the style string into an object.
+	 *
+	 * First tries to parse the style string as a JSON string. If that does not work,
+	 * tries interpret the style string as the name of a predefined style and load
+	 * the respective style file. If that does not work either, throws an error.
+	 *
+	 */
+	convertStyle : function( style ) {
+		try {
+			return typeof style === 'string' ? JSON.parse( style ) : style;
+		} catch( e ) {
+			try {
+				return require( __dirname + '/lib/styles/' + style + '.json' );
+			} catch( e2 ) {
+
+				var msg = style + ' is not a valid style.\n\nValid predefined styles are:\n';
+
+				var files = fs.readdirSync( __dirname + '/lib/styles/' );
+
+				for( var i in files ) {
+					msg += '  ' + files[ i ].slice( 0, -5 ) + '\n';
+				}
+
+				throw new Error( msg );
+			}
 		}
 	}
-}
+};
