@@ -50,6 +50,11 @@ function testInferrance( setting ) {
 	} );
 }
 
+function verifyPath( path ) {
+	fs.existsSync( path ).should.be.true;
+	return path;
+}
+
 function infer( samplePath, callback ) {
 	var sampleStream = fs.createReadStream( samplePath );
 	sampleStream.pause();
@@ -64,8 +69,8 @@ function testTransformation( setting ) {
 	setting.name = folders[ folders.length - 2 ];
 	it( 'formats ' + setting.name + ' setting properly', function( done ) {
 		var inputPath = verifyPath( setting.folder + 'input.js' );
-		var outputPath = verifyPath( setting.folder + 'output.js' );
-		var expected = fs.readFileSync( outputPath, 'utf-8' );
+		var expectedPath = verifyPath( setting.folder + 'expected.js' );
+		var expected = fs.readFileSync( expectedPath, 'utf-8' );
 		var tempPath = setting.folder + 'temp.js';
 
 		transform( inputPath, setting.styles, tempPath, function() {
@@ -75,11 +80,6 @@ function testTransformation( setting ) {
 			done();
 		} );
 	} );
-}
-
-function verifyPath( path ) {
-	fs.existsSync( path ).should.be.true;
-	return path;
 }
 
 function transform( inputPath, style, outputPath, callback ) {

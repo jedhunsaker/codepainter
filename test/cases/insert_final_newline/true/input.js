@@ -1,4 +1,4 @@
-﻿var i;
+var i;
 var fib = [];
 
 fib[0] = 0;

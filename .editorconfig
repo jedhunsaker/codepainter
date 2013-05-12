@@ -12,6 +12,6 @@ space_after_control_statements = true
 space_after_anonymous_functions = true
 spaces_in_parens = idiomatic
 
-[package.json]
+[*.json]
 indent_style = space
 indent_size = 2
