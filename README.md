@@ -80,10 +80,12 @@ Supported style properties
 
     `var x = 4 * 2 + 1 / 7;` -> `var x = 4*2 + 1/7;`
 
-1.  **spaces\_in\_parens**: *true*, *false*, *idiomatic*
+1.  **spaces\_in\_brackets**: *true*, *false*, *idiomatic*
 
-    Specifies whether or not there should be spaces inside parenthesis. Empty pairs of parenthesis will always be
-    shortened. Refer to [Idiomatic Style Manifesto](https://github.com/rwldrn/idiomatic.js/#whitespace) for
-    *idiomatic* setting.
+    Specifies whether or not there should be spaces inside brackets, which includes `(),[],{}`.
+    Empty pairs of brackets will always be shortened.
 
     `(x===4)` -> `( x===4 )` or `( )` -> `()`
+
+    Refer to [Idiomatic Style Manifesto](https://github.com/rwldrn/idiomatic.js/#whitespace) for the
+    *idiomatic* setting.
