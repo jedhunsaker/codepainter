@@ -8,5 +8,5 @@
     "spaces_around_operators": true,
     "space_after_control_statements": true,
     "space_after_anonymous_functions": true,
-    "spaces_in_parens": "idiomatic"
+    "spaces_in_parens": "hybrid"
 }
